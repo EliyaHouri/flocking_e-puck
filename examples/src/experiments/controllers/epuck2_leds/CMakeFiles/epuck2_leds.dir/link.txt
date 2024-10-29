@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared  -o libepuck2_leds.so CMakeFiles/epuck2_leds.dir/epuck2_leds.o  -largos3core_simulator -largos3plugin_simulator_epuck2 -largos3plugin_simulator_genericrobot 

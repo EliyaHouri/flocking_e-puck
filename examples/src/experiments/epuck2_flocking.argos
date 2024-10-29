@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+    <framework>
+        <system threads="0" log-level="debug" />
+        <experiment length="0" ticks_per_second="10" random_seed="0" />
+    </framework>
+
+    <controllers>
+        <epuck2_flocking_controller id="fdc" library="build/lib/controllers/epuck2_flocking/libepuck2_flocking">
+            <actuators>
+                <differential_steering implementation="default"/>
+                <epuck2_leds implementation="default" medium="leds" />
+                <range_and_bearing implementation="default" />
+            </actuators>
+            <sensors>
+                <epuck2_proximity implementation="default" show_rays="false"/>
+                <epuck2_tof implementation="default" show_rays="false"/>
+                <range_and_bearing implementation="medium" medium="rab" show_rays="true" />
+            </sensors>
+            <params debug="3" distance="50">
+                <flocking target_distance="20.0" gain="1000.0" exponent="2.0" max_interaction="1.0" wall_distance = "75.0"
+                max_wall_interaction="3.0" goal_distance="0.2" />
+            </params>
+        </epuck2_flocking_controller>
+    </controllers>
+
+    <arena size="3.0,3.0,1.0" center="0.0,0.0,0.5">
+    <box id="north_wall_1" size="0.75,0.01,0.2" movable="false">
+        <body position="-0.75,1.0,0" orientation="0,0,0" />
+    </box>
+    <box id="north_wall_2" size="0.75,0.01,0.2" movable="false">
+        <body position="0.75,1.0,0" orientation="0,0,0" />
+    </box>
+
+    <!-- Three fixed round obstacles in the middle -->
+    
+    
+    <cylinder id="obstacle_2" radius="0.2" height="0.2" movable="false">
+        <body position="0.4, 0.0, 0"/>  <!-- Positioned slightly to the right of the center -->
+    </cylinder>
+    
+    <cylinder id="obstacle_3" radius="0.2" height="0.2" movable="false">
+        <body position="-0.4, 0.0, 0.0"/>  <!-- Positioned slightly to the left of the center -->
+    </cylinder>
+
+    <!-- Place 10 robots such that each new robot is within max 0.3 distance from another -->
+    <e-puck2 id="epuck_1" rab_range="0.5" rab_data_size="3">
+        <body position="0.0,0.0,0" orientation="0,0,0"/>
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_2" rab_range="0.5" rab_data_size="3">
+        <body position="0.3,0.3,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_3" rab_range="0.5" rab_data_size="3">
+        <body position="0.0,0.6,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_4" rab_range="0.5" rab_data_size="3">
+        <body position="-0.3,0.6,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_5" rab_range="0.5" rab_data_size="3">
+        <body position="0.0,-0.3,0" orientation="0,0,0"/>
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_6" rab_range="0.5" rab_data_size="3">
+        <body position="0.3,-0.6,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_7" rab_range="0.5" rab_data_size="3">
+        <body position="-0.3,-0.6,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_8" rab_range="0.5" rab_data_size="3">
+        <body position="0.6,-0.3,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_9" rab_range="0.5" rab_data_size="3">
+        <body position="-0.6,-0.3,0" orientation="0,0,0"/>  <!-- Adjusted position to avoid obstacles -->
+        <controller config="fdc" />
+    </e-puck2>
+
+    <e-puck2 id="epuck_10" rab_range="0.5" rab_data_size="3">
+        <body position="0.15,0.15,0" orientation="0,0,0"/>
+        <controller config="fdc" />
+    </e-puck2>
+
+</arena>
+
+
+
+    <physics_engines>
+        <dynamics2d id="dyn2d" />
+    </physics_engines>
+
+    <media>
+        <led id="leds" />
+        <range_and_bearing id="rab" check_occlusions="false" />
+    </media>
+
+    <loop_functions library="build/lib/loop_functions/flocking_loop_functions/libflocking_loop_functions" label="flocking_loop_functions"/>
+
+    <visualization>
+        <qt-opengl>
+            <camera>
+                <placements>
+                    <placement index="0" position="0.0,-0.792159,1.51472" look_at="0.0,-0.41199,0.58981" up="-0.00924894,0.924863,0.380188" lens_focal_length="20" />
+                    <placement index="1" position="-0.0829287,-0.0227577,1.3617" look_at="-0.0829246,-0.01536,0.36173" up="0.000554972,0.999972,0.00739777" lens_focal_length="15" />
+                </placements>
+            </camera>
+        </qt-opengl>
+    </visualization>
+
+</argos-configuration>
+

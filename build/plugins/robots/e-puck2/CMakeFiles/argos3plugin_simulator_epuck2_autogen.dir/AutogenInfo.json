@@ -1,0 +1,326 @@
+{
+	"BUILD_DIR" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/argos3plugin_simulator_epuck2_autogen",
+	"CMAKE_BINARY_DIR" : "/home/eliyahu/Desktop/e-puck2/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/CMakeLists.txt"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/eliyahu/Desktop/e-puck2/src",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_encoder_sensor.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_encoder_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_ground_sensor.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_ground_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_leds_actuator.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_leds_actuator.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_light_sensor.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_light_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_proximity_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_tof_sensor.h",
+			"Mu",
+			"3MFEH3VTBK/moc_ci_epuck2_tof_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/dynamics2d_epuck2_model.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_dynamics2d_epuck2_model.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_battery_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_battery_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_battery_equipped_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_battery_equipped_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_camera_equipped_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_camera_equipped_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_colored_blob_perspective_camera_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_colored_blob_perspective_camera_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_encoder_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_encoder_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_encoder_equipped_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_encoder_equipped_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_ground_rotzonly_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_ground_rotzonly_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_led_default_actuator.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_led_default_actuator.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_led_equipped_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_led_equipped_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_light_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_light_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_proximity_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_proximity_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_tof_default_sensor.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_tof_default_sensor.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_tof_equipped_entity.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_epuck2_tof_equipped_entity.cpp",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/qtopengl_epuck2.h",
+			"Mu",
+			"LXGZ3MSUWV/moc_qtopengl_epuck2.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/argos3plugin_simulator_epuck2_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/argos3plugin_simulator_epuck2_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : 
+	[
+		"ARGOS_simulator_BUILD",
+		"GL_SILENCE_DEPRECATION",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"argos3plugin_simulator_epuck2_EXPORTS"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2",
+		"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2",
+		"/home/eliyahu/Desktop/e-puck2/src",
+		"/home/eliyahu/Desktop/e-puck2/build",
+		"/usr/include/Headers",
+		"/usr/include/lua",
+		"/usr/include/x86_64-linux-gnu/qt5",
+		"/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
+		"/usr/include/x86_64-linux-gnu/qt5/QtGui",
+		"/usr/include/x86_64-linux-gnu/qt5/QtCore",
+		"/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++",
+		"/usr/local/include",
+		"/usr/include",
+		"/usr/include/c++/11",
+		"/usr/include/x86_64-linux-gnu/c++/11",
+		"/usr/include/c++/11/backward",
+		"/usr/lib/gcc/x86_64-linux-gnu/11/include",
+		"/usr/include/x86_64-linux-gnu"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/argos3plugin_simulator_epuck2_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 2,
+	"PARSE_CACHE_FILE" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/CMakeFiles/argos3plugin_simulator_epuck2_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/lib/qt5/bin/moc",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/home/eliyahu/Desktop/e-puck2/build/plugins/robots/e-puck2/CMakeFiles/argos3plugin_simulator_epuck2_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_encoder_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_ground_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_leds_actuator.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_light_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/control_interface/ci_epuck2_tof_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/dynamics2d_epuck2_model.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_battery_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_battery_equipped_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_camera_equipped_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_colored_blob_perspective_camera_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_encoder_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_encoder_equipped_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_ground_rotzonly_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_led_default_actuator.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_led_equipped_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_light_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_proximity_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_tof_default_sensor.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/epuck2_tof_equipped_entity.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/eliyahu/Desktop/e-puck2/src/plugins/robots/e-puck2/simulator/qtopengl_epuck2.cpp",
+			"Mu",
+			null
+		]
+	],
+	"VERBOSITY" : 0
+}
