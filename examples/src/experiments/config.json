@@ -1,0 +1,7 @@
+{
+    "repulsion_force": 15,
+    "speed_factor": 2.0,
+    "enemy_speed": 5.0,
+    "noise": 0.0
+}
+

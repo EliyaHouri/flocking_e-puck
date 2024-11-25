@@ -8,6 +8,8 @@
 #ifndef EPUCK2_FLOCKING_H
 #define EPUCK2_FLOCKING_H
 
+#define ENEMY_ID 255
+
 #include <argos3/core/control_interface/ci_controller.h>
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
 #include <argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.h>
@@ -28,7 +30,10 @@ struct SFlockingInteractionParams {
     Real MaxInteraction;
     Real MaxWallInteracation;
     Real WallDistance;
-    Real GoalDistance;  // Distance to the goal center
+    Real GoalDistance;
+    Real RepulsionForce;
+    Real Noise;
+    Real SpeedFactor;
 
     void Init(TConfigurationNode& t_node);
     Real GeneralizedLennardJones(Real f_distance);
@@ -45,6 +50,7 @@ public:
     virtual void ControlStep();
     virtual void Reset();
     virtual void Destroy();
+    void DisableActuatorsAndSensors();
 
 private:
 
@@ -61,7 +67,6 @@ private:
 private:
 
     void Flock();
-    void DisableActuatorsAndSensors();
     CVector2 VectorToLight();
     CVector2 FlockingVector();
     CVector2 CalculateWallRepulsionForce();

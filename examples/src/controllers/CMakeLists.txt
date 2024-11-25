@@ -6,3 +6,4 @@
 # add_subdirectory(epuck2_leds)
 # add_subdirectory(epuck2_ground)
 add_subdirectory(epuck2_flocking)
+add_subdirectory(epuck2_enemy)

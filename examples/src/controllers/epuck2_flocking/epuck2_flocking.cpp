@@ -24,21 +24,23 @@ CEPuck2Flocking::CEPuck2Flocking() :
     m_pcRABAct(NULL),
     m_pcRABSens(NULL),
     m_eState(STATE_START),
-    m_strRobotId(""),
-    m_uWaitTicks(1) {}  // Initialize wait ticks
+    m_strRobotId("") {}
 
 /****************************************/
 /****************************************/
 
 void SFlockingInteractionParams::Init(TConfigurationNode& t_node) {
     try {
-        GetNodeAttribute(t_node, "target_distance", TargetDistance);
-        GetNodeAttribute(t_node, "gain", Gain);
-        GetNodeAttribute(t_node, "exponent", Exponent);
-        GetNodeAttribute(t_node, "max_interaction", MaxInteraction);
-        GetNodeAttribute(t_node, "max_wall_interaction", MaxWallInteracation);
-        GetNodeAttribute(t_node, "wall_distance", WallDistance);
-        GetNodeAttribute(t_node, "goal_distance", GoalDistance);
+        GetNodeAttributeOrDefault(t_node, "target_distance", TargetDistance, 20.0);
+        GetNodeAttributeOrDefault(t_node, "gain", Gain, 1000.0);
+        GetNodeAttributeOrDefault(t_node, "exponent", Exponent, 2.0);
+        GetNodeAttributeOrDefault(t_node, "max_interaction", MaxInteraction, 1.0);
+        GetNodeAttributeOrDefault(t_node, "max_wall_interaction", MaxWallInteracation, 3.0);
+        GetNodeAttributeOrDefault(t_node, "wall_distance", WallDistance, 75.0);
+        GetNodeAttributeOrDefault(t_node, "goal_distance", GoalDistance, 0.2);
+        GetNodeAttributeOrDefault(t_node, "repulsion_force", RepulsionForce, 15.0);
+	GetNodeAttributeOrDefault(t_node, "speed_factor", SpeedFactor, 1.0);
+	GetNodeAttributeOrDefault(t_node, "noise", Noise, 0.0);
     }
     catch(CARGoSException& ex) {
         THROW_ARGOSEXCEPTION_NESTED("Error initializing flocking parameters.", ex);
@@ -73,17 +75,11 @@ void CEPuck2Flocking::Init(TConfigurationNode &t_node) {
     m_eState = STATE_START;
 }
 
-/****************************************/
-/****************************************/
+/****************************************
+basic state machine
+****************************************/
 
 void CEPuck2Flocking::ControlStep() {
-//remove it
-    if (m_bIsScheduledForRemoval) {
-        // Skip control step if the robot is scheduled for removal
-        DisableActuatorsAndSensors();  // Only disable components, but no removal here
-        return;
-    }
-
     switch(m_eState) {
         case STATE_START:
             m_eState = STATE_FLOCK;
@@ -100,19 +96,20 @@ void CEPuck2Flocking::ControlStep() {
 }
 
 
-/****************************************/
 /****************************************
+disable all sensors before removal
+****************************************/
 
 void CEPuck2Flocking::DisableActuatorsAndSensors() {
     // Stop actuators
-    m_pcWheels->SetLinearVelocity(0.0, 0.0);
-    m_pcLedAct->SetAllBlack();
-    m_pcRABAct->ClearData();
+    if (m_pcWheels) m_pcWheels->SetLinearVelocity(0.0, 0.0);
+    if (m_pcLedAct) m_pcLedAct->SetAllBlack();
+    if (m_pcRABAct) m_pcRABAct->ClearData();
 
     // Disable sensors
-    m_pcRABSens->Disable();
-    m_pcProximity->Disable();
-    m_pcTOFSensor->Disable();
+    if (m_pcProximity) m_pcProximity->Disable();
+    if (m_pcTOFSensor) m_pcTOFSensor->Disable();
+    if (m_pcRABSens) m_pcRABSens->Disable();
 }
 
 /****************************************/
@@ -120,7 +117,7 @@ void CEPuck2Flocking::DisableActuatorsAndSensors() {
 
 void CEPuck2Flocking::Flock() {
     CVector2 cDirection = VectorToLight() + FlockingVector() + CalculateWallRepulsionForce();
-    m_pcWheels->SetLinearVelocity(cDirection.GetX(), cDirection.GetY());
+    m_pcWheels->SetLinearVelocity(cDirection.GetX() * m_sFlockingParams.SpeedFactor, cDirection.GetY() * m_sFlockingParams.SpeedFactor);
 }
 
 /****************************************/
@@ -140,7 +137,7 @@ CVector2 CEPuck2Flocking::VectorToLight() {
     CVector2 cRobotPos2D(cRobotPosition.GetX(), cRobotPosition.GetY());
 
     // The point we defined as the target ("light")
-    CVector2 cLight(0.0, 1.0);
+    CVector2 cLight(0.0, 1.2);
 
     // Calculate the vector to the light (this gives direction and distance)
     CVector2 cDirectionToLight = cLight - cRobotPos2D;
@@ -149,14 +146,13 @@ CVector2 CEPuck2Flocking::VectorToLight() {
     CRadians cAngleToLight = cDirectionToLight.Angle() - cRobotYaw;
 
     // Optionally normalize and scale the vector if needed
-    if (cDirectionToLight.Length() > 0.01) {
         cDirectionToLight.Normalize();
         cDirectionToLight *= 0.5;  // Apply a small potential force
-    }
 
     // Return the vector pointing toward the light with consideration of angle
     return CVector2(cDirectionToLight.Length(), cAngleToLight);
 }
+
 
 /****************************************/
 /****************************************/
@@ -164,41 +160,21 @@ CVector2 CEPuck2Flocking::VectorToLight() {
 CVector2 CEPuck2Flocking::FlockingVector() {
     const CCI_RangeAndBearingSensor::TReadings& tRABReadings = m_pcRABSens->GetReadings();
     CVector2 cAccum;
-    if(!tRABReadings.empty()) {
-        for(size_t i = 0; i < tRABReadings.size(); ++i) {
-            // Add a check to ensure the reading is valid
-            if(tRABReadings[i].Range > 0.0f) {
+    if (!tRABReadings.empty()) {
+        for (size_t i = 0; i < tRABReadings.size(); ++i) {
+            // Skip messages from the enemy robot by checking if the identifier is 255
+            if (tRABReadings[i].Data[0] == ENEMY_ID) continue; // Ignore enemy RAB messages
+
+            if (tRABReadings[i].Range > 0.0f) {
                 Real fLJ = m_sFlockingParams.GeneralizedLennardJones(tRABReadings[i].Range);
                 cAccum += CVector2(fLJ, tRABReadings[i].HorizontalBearing);
             }
         }
-        if(cAccum.Length() > m_sFlockingParams.MaxInteraction) {
             cAccum.Normalize();
-            cAccum *= m_sFlockingParams.MaxInteraction;
-        }
     }
     return cAccum;
 }
 
-
-/****************************************/
-/****************************************/
-
-bool CEPuck2Flocking::IsCloseToLight() {
-    // Get the robot entity from the space by the robot's ID
-    CEPuck2Entity& cEntity = dynamic_cast<CEPuck2Entity&>(CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
-    CEmbodiedEntity& cEmbodiedEntity = cEntity.GetEmbodiedEntity();
-    const CVector3& cRobotPosition = cEmbodiedEntity.GetOriginAnchor().Position;
-
-    // Get the robot's 2D position
-    CVector2 cRobotPos2D(cRobotPosition.GetX(), cRobotPosition.GetY());
-
-    // The point we defined as the target ("light")
-    CVector2 cLight(0.0, 1.0);
-
-    // Check if the robot is within the goal distance from the light
-    return (cRobotPos2D - cLight).Length() < m_sFlockingParams.GoalDistance;
-}
 
 /****************************************/
 /****************************************/
@@ -220,15 +196,12 @@ CVector2 CEPuck2Flocking::CalculateWallRepulsionForce() {
         
         // Check if the vector length exceeds the maximum allowed interaction
         if (cRepulsionVector.Length() > 0.0f) {
-            if(cRepulsionVector.Length() > m_sFlockingParams.MaxInteraction) {
                 cRepulsionVector.Normalize();
-                cRepulsionVector *= m_sFlockingParams.MaxInteraction;
             }
-        }
     }
 
     // Reverse the vector direction
-    return cRepulsionVector * -15;
+    return cRepulsionVector * -1 * m_sFlockingParams.RepulsionForce;
 }
 
 /****************************************/
@@ -263,9 +236,6 @@ void CEPuck2Flocking::Destroy() {
     if(m_pcTOFSensor) {
         m_pcTOFSensor->Disable();
     }
-
-    // Any additional cleanup steps for your robot's controller or components can go here
-    LOG << "Destroyed controller for robot: " << m_strRobotId << std::endl;
 }
 
 
