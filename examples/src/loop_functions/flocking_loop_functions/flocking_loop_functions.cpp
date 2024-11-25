@@ -41,7 +41,6 @@ void CFlockingLoopFunctions::PostStep() {
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
     for (auto it = cEpuckBots.begin(); it != cEpuckBots.end(); ++it) {
         CEPuck2Entity& cEpuckBot = *any_cast<CEPuck2Entity*>(it->second);
-        std::cout << cEpuckBot.GetId() << std::endl;
 
         // Skip the enemy bot itself
         if (cEpuckBot.GetId() == "enemy_robot") continue;

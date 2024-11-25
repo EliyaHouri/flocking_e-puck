@@ -116,9 +116,18 @@ void CEPuck2Flocking::DisableActuatorsAndSensors() {
 /****************************************/
 
 void CEPuck2Flocking::Flock() {
-    CVector2 cDirection = VectorToLight() + FlockingVector() + CalculateWallRepulsionForce();
+    // Calculate individual components
+    CVector2 cVectorToLight = VectorToLight();
+    CVector2 cFlockingVector = FlockingVector();
+    CVector2 cWallRepulsionForce = CalculateWallRepulsionForce();
+
+    // Sum the components to calculate the final direction
+    CVector2 cDirection = cVectorToLight + cFlockingVector + cWallRepulsionForce;
+
+    // Set the robot's wheels based on the final direction
     m_pcWheels->SetLinearVelocity(cDirection.GetX() * m_sFlockingParams.SpeedFactor, cDirection.GetY() * m_sFlockingParams.SpeedFactor);
 }
+
 
 /****************************************/
 /****************************************/
@@ -145,9 +154,13 @@ CVector2 CEPuck2Flocking::VectorToLight() {
     // Calculate the angle to the light relative to the robot's current heading
     CRadians cAngleToLight = cDirectionToLight.Angle() - cRobotYaw + CRadians(ARGOS_PI / 4);;
 
-    // Optionally normalize and scale the vector if needed
+    if (fabs(cDirectionToLight.Length()) < 0.00005f) {
+        cDirectionToLight = CVector2(0.0, 0.0); // Avoid invalid vector
+    } else {
         cDirectionToLight.Normalize();
         cDirectionToLight *= 0.5;  // Apply a small potential force
+    }
+
 
     // Return the vector pointing toward the light with consideration of angle
     return CVector2(cDirectionToLight.Length(), cAngleToLight);
@@ -170,7 +183,11 @@ CVector2 CEPuck2Flocking::FlockingVector() {
                 cAccum += CVector2(fLJ, tRABReadings[i].HorizontalBearing);
             }
         }
-            cAccum.Normalize();
+            if (fabs(cAccum.Length()) < 0.00005f) {
+                cAccum = CVector2(0.0, 0.0); // Avoid invalid vector
+            } else {
+                cAccum.Normalize();
+            }
     }
     return cAccum;
 }
@@ -195,9 +212,12 @@ CVector2 CEPuck2Flocking::CalculateWallRepulsionForce() {
         }
         
         // Check if the vector length exceeds the maximum allowed interaction
-        if (cRepulsionVector.Length() > 0.0f) {
-                cRepulsionVector.Normalize();
-            }
+        if (fabs(cRepulsionVector.Length()) < 0.00005f) {
+            cRepulsionVector = CVector2(0.0, 0.0); // Avoid invalid vector
+        } else {
+            cRepulsionVector.Normalize();
+        }
+
     }
 
     // Reverse the vector direction

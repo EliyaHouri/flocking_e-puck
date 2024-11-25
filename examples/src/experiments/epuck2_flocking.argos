@@ -41,23 +41,7 @@
 	</robot_xaxis_controller>
 </controllers>
 
-    <arena size="3.0,4.0,1.0" center="0.0,0.0,0.5">
-    <!--<box id="north_wall_1" size="0.75,0.01,0.2" movable="false">
-        <body position="-0.75,1.0,0" orientation="0,0,0" />
-    </box>
-    <box id="north_wall_2" size="0.75,0.01,0.2" movable="false">
-        <body position="0.75,1.0,0" orientation="0,0,0" />
-    </box> 
-    
-    
-    <cylinder id="obstacle_2" radius="0.2" height="0.2" movable="false">
-        <body position="0.4, 0.0, 0"/> 
-    </cylinder>-->
-    
-    <cylinder id="obstacle_3" radius="0.01" height="0.2" movable="false">
-        <body position="0.0, 1.2, 0.0"/>
-    </cylinder>
-    
+    <arena size="3.0,4.0,1.0" center="0.0,0.0,0.5">    
     <!-- Adding the enemy robot -->
     <e-puck2 id="enemy_robot" rab_range="0.5" rab_data_size="3">
         <body position="1.45,0.8.0,0" orientation="0,0,0"/>
