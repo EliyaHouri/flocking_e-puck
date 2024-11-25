@@ -140,10 +140,10 @@ CVector2 CEPuck2Flocking::VectorToLight() {
     CVector2 cLight(0.0, 1.2);
 
     // Calculate the vector to the light (this gives direction and distance)
-    CVector2 cDirectionToLight = cLight - cRobotPos2D;
+    CVector2 cDirectionToLight(0.0, cLight.GetY() - cRobotPos2D.GetY());
 
     // Calculate the angle to the light relative to the robot's current heading
-    CRadians cAngleToLight = cDirectionToLight.Angle() - cRobotYaw;
+    CRadians cAngleToLight = cDirectionToLight.Angle() - cRobotYaw + CRadians(ARGOS_PI / 4);;
 
     // Optionally normalize and scale the vector if needed
         cDirectionToLight.Normalize();

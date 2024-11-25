@@ -19,7 +19,7 @@
 		    <range_and_bearing implementation="medium" medium="rab" show_rays="true" />
 		</sensors>
 		<params debug="3" distance="50">
-		    <flocking target_distance="20.0" gain="1000.0" exponent="2.0" max_interaction="1.0" wall_distance="75.0"
+		    <flocking target_distance="20.0" gain="10.0" exponent="6.0" max_interaction="1.0" wall_distance="75.0"
 		    max_wall_interaction="3.0" goal_distance="0.2" repulsion_force="15.0" speed_factor="2.0" noise="0.0" />
 		</params>
 	</epuck2_flocking_controller>

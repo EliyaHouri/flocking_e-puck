@@ -13,6 +13,9 @@
 #include <argos3/core/simulator/space/space.h>
 #include <argos3/core/simulator/simulator.h>
 #include <fstream>
+#include <thread>
+#include <chrono>
+
 
 
 CFlockingLoopFunctions::CFlockingLoopFunctions() : m_unKilledByEnemy(0), m_unReachedTarget(0) {}
@@ -30,9 +33,6 @@ void CFlockingLoopFunctions::PostStep() {
     CEPuck2Entity* pcEnemyBot = dynamic_cast<CEPuck2Entity*>(&GetSpace().GetEntity("enemy_robot"));
     CVector3 cEnemyPos = pcEnemyBot->GetEmbodiedEntity().GetOriginAnchor().Position;
 
-    // Define target position, for example, at (0, 1.2) on the x-y plane
-    CVector2 cTargetPosition(0.0, 1.2);
-
     // Containers to track robots to remove due to enemy collision and target reached
     std::vector<std::string> robotsToRemoveForCollision;
     std::vector<std::string> robotsToRemoveForTarget;
@@ -41,6 +41,7 @@ void CFlockingLoopFunctions::PostStep() {
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
     for (auto it = cEpuckBots.begin(); it != cEpuckBots.end(); ++it) {
         CEPuck2Entity& cEpuckBot = *any_cast<CEPuck2Entity*>(it->second);
+        std::cout << cEpuckBot.GetId() << std::endl;
 
         // Skip the enemy bot itself
         if (cEpuckBot.GetId() == "enemy_robot") continue;
@@ -48,16 +49,15 @@ void CFlockingLoopFunctions::PostStep() {
         // Get the position of the current robot
         CVector3 cPos = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
         Real fDistanceToEnemy = (cEnemyPos - cPos).Length();
-        CVector2 cRobotPos2D(cPos.GetX(), cPos.GetY());
-        Real fDistanceToTarget = (cRobotPos2D - cTargetPosition).Length();
+        Real fDistanceToTarget = abs(cPos.GetY() - 1.2);
 
         // Check if the robot is close to the enemy (collision)
-        if (fDistanceToEnemy < 0.1) { // Adjust threshold as needed
+        if (fDistanceToEnemy < 0.1) { // 0.1 distance from enemy
             robotsToRemoveForCollision.push_back(cEpuckBot.GetId());
         }
         
         // Check if the robot is close enough to the target
-        if (fDistanceToTarget < 0.2) { // Adjust threshold as needed
+        if (fDistanceToTarget < 0.2) { // 0.2 distance from target
             robotsToRemoveForTarget.push_back(cEpuckBot.GetId());
         }
     }
