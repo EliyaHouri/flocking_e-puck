@@ -39,8 +39,8 @@ void SFlockingInteractionParams::Init(TConfigurationNode& t_node) {
         GetNodeAttributeOrDefault(t_node, "wall_distance", WallDistance, 75.0);
         GetNodeAttributeOrDefault(t_node, "goal_distance", GoalDistance, 0.2);
         GetNodeAttributeOrDefault(t_node, "repulsion_force", RepulsionForce, 15.0);
-	GetNodeAttributeOrDefault(t_node, "speed_factor", SpeedFactor, 1.0);
-	GetNodeAttributeOrDefault(t_node, "noise", Noise, 0.0);
+        GetNodeAttributeOrDefault(t_node, "speed_factor", SpeedFactor, 1.0);
+        GetNodeAttributeOrDefault(t_node, "noise", Noise, 0.0);
     }
     catch(CARGoSException& ex) {
         THROW_ARGOSEXCEPTION_NESTED("Error initializing flocking parameters.", ex);

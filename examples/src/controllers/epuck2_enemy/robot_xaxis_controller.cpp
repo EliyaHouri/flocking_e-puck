@@ -1,34 +1,54 @@
 #include "robot_xaxis_controller.h"
 #include <argos3/core/utility/logging/argos_log.h>
 
+// Constructor
 CRobotXAxisController::CRobotXAxisController() :
     m_pcWheels(nullptr),
     m_pcRABAct(nullptr),
-    m_unTicks(0),
     m_bMovingForward(true) {}
 
-void CRobotXAxisController::Init(TConfigurationNode& t_node) {
-    m_pcWheels = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
-    m_pcRABAct = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
-    m_unTicks = 0;
-    m_bMovingForward = true;
-    GetNodeAttributeOrDefault(t_node, "enemy_speed", EnemySpeed, 5.0);
-
+// Initialize enemy parameters
+void SEnemyParams::Init(TConfigurationNode& t_node) {
+    GetNodeAttributeOrDefault(t_node, "enemy_speed", EnemySpeed, 2.0);
 }
 
+// Initialize the controller
+void CRobotXAxisController::Init(TConfigurationNode& t_node) {
+    // Initialize actuators
+    m_pcWheels = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
+    m_pcRABAct = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
+    m_bMovingForward = true;
+
+    // Initialize the enemy parameters
+    m_sEnemyParams.Init(GetNode(t_node, "enemy"));
+}
+
+// Main control loop
 void CRobotXAxisController::ControlStep() {
-    // Set a unique identifier in the RAB message (for example, 255)
+    // Set a unique identifier in the RAB message
     if (m_pcRABAct) {
         m_pcRABAct->SetData(0, ENEMY_ID);  // 255 is a unique identifier for enemy
     }
 
-    // Move the robot back and forth along the x-axis
-    if (m_unTicks++ % 580 == 0) {
-        m_bMovingForward = !m_bMovingForward;
+    // Get the robot's current position
+    CEPuck2Entity* pcEntity = dynamic_cast<CEPuck2Entity*>(&CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
+    if (!pcEntity) {
+        LOGERR << "Failed to cast entity to CEPuck2Entity for ID: " << GetId() << std::endl;
+        return;
     }
-    Real fSpeed = m_bMovingForward ? EnemySpeed : -1 * EnemySpeed;
-    m_pcWheels->SetLinearVelocity(fSpeed, fSpeed);
+    const CVector3& cPosition = pcEntity->GetEmbodiedEntity().GetOriginAnchor().Position;
+
+    // Check if the robot has reached the boundary of the x-axis
+    if (cPosition.GetX() >= 1.45) {
+        m_bMovingForward = false;  // Reverse direction
+    } else if (cPosition.GetX() <= -1.45) {
+        m_bMovingForward = true;  // Reverse direction
+    }
+
+    // Move the robot based on the direction
+    Real fSpeed = m_bMovingForward ? m_sEnemyParams.EnemySpeed : -m_sEnemyParams.EnemySpeed;
+    m_pcWheels->SetLinearVelocity(fSpeed * m_sEnemyParams.EnemySpeed, fSpeed * m_sEnemyParams.EnemySpeed);
 }
 
+// Register the controller
 REGISTER_CONTROLLER(CRobotXAxisController, "robot_xaxis_controller")
-

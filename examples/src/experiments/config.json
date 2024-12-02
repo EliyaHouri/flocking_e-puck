@@ -1,7 +1,8 @@
 {
-    "repulsion_force": 15,
+    "repulsion_force": 15.0,
     "speed_factor": 2.0,
-    "enemy_speed": 5.0,
-    "noise": 0.0
+    "enemy_speed": 2.0,
+    "gain": 10.0,
+    "target_distance": 20.0
 }
 

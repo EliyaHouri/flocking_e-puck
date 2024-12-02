@@ -82,13 +82,15 @@ write data to the results file
 
 void CFlockingLoopFunctions::PostExperiment() {
     // Output the final counts to a text file
-    std::ofstream outFile("results.txt");  // Specify the output file path
+    std::ofstream outFile("results.txt");
     outFile << "killed " << m_unKilledByEnemy << "\n";
     outFile << "reached_target " << m_unReachedTarget << "\n";
+    outFile << "ticks " << CSimulator::GetInstance().GetSpace().GetSimulationClock() << "\n"; // Add ticks count
     outFile.close();
 
     LOG << "Results saved to results.txt" << std::endl;
 }
+
 
 /********************
 stop the experiment when all robots are gone

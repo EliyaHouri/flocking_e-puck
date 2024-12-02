@@ -19,7 +19,7 @@
 		    <range_and_bearing implementation="medium" medium="rab" show_rays="true" />
 		</sensors>
 		<params debug="3" distance="50">
-		    <flocking target_distance="20.0" gain="10.0" exponent="6.0" max_interaction="1.0" wall_distance="75.0"
+		    <flocking target_distance="15.0" gain="10.0" exponent="6.0" max_interaction="1.0" wall_distance="75.0"
 		    max_wall_interaction="3.0" goal_distance="0.2" repulsion_force="15.0" speed_factor="2.0" noise="0.0" />
 		</params>
 	</epuck2_flocking_controller>
@@ -35,8 +35,8 @@
 		    <epuck2_tof implementation="default" show_rays="false"/>
 		    <range_and_bearing implementation="medium" medium="rab" show_rays="false" />
 		</sensors>
-		<params debug="3">
-		    <enemy enemy_speed = "5.0"/>
+		<params debug="3" >
+		    <enemy enemy_speed="2.0" />
 		</params>
 	</robot_xaxis_controller>
 </controllers>
@@ -48,46 +48,42 @@
         <controller config="enemy" />
     </e-puck2>
 
-    <!-- Place 10 robots such that each new robot is within max 0.3 distance from another -->
     <e-puck2 id="epuck_0" rab_range="0.5" rab_data_size="3">
-        <body position="0.0,-1.0.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_1" rab_range="0.5" rab_data_size="3">
-        <body position="0.33,-1.0.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_2" rab_range="0.5" rab_data_size="3">
-        <body position="-0.33,-1.0.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_3" rab_range="0.5" rab_data_size="3">
-        <body position="0.0,-0.75.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_4" rab_range="0.5" rab_data_size="3">
-        <body position="-0.33,-0.75.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_5" rab_range="0.5" rab_data_size="3">
-        <body position="0.33,-0.75.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_6" rab_range="0.5" rab_data_size="3">
-        <body position="0.0,-0.5.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_7" rab_range="0.5" rab_data_size="3">
-        <body position="-0.33,-0.5.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-    <e-puck2 id="epuck_8" rab_range="0.5" rab_data_size="3">
-        <body position="0.33,-0.5.0,0" orientation="0,0,0"/>
-        <controller config="fdc" />
-    </e-puck2>
-   
-
-    
+    <body position="0.0,-1.2,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_1" rab_range="0.5" rab_data_size="3">
+    <body position="0.33,-1.2,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_2" rab_range="0.5" rab_data_size="3">
+    <body position="-0.33,-1.2,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_3" rab_range="0.5" rab_data_size="3">
+    <body position="0.0,-0.95,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_4" rab_range="0.5" rab_data_size="3">
+    <body position="-0.33,-0.95,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_5" rab_range="0.5" rab_data_size="3">
+    <body position="0.33,-0.95,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_6" rab_range="0.5" rab_data_size="3">
+    <body position="0.0,-0.7,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_7" rab_range="0.5" rab_data_size="3">
+    <body position="-0.33,-0.7,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
+<e-puck2 id="epuck_8" rab_range="0.5" rab_data_size="3">
+    <body position="0.33,-0.7,0" orientation="0,0,0"/>
+    <controller config="fdc" />
+</e-puck2>
 
 </arena>
 
@@ -104,7 +100,7 @@
 
     <loop_functions library="build/lib/loop_functions/flocking_loop_functions/libflocking_loop_functions" label="flocking_loop_functions"/>
 
-    <visualization>
+    <!--<visualization>
         <qt-opengl>
             <camera>
                 <placements>
@@ -113,7 +109,7 @@
                 </placements>
             </camera>
         </qt-opengl>
-    </visualization>
-
+    </visualization>-->
+    
 </argos-configuration>
 
