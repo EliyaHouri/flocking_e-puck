@@ -36,7 +36,7 @@
 		    <range_and_bearing implementation="medium" medium="rab" show_rays="false" />
 		</sensors>
 		<params debug="3" >
-		    <enemy enemy_speed="2.0" />
+		    <enemy enemy_speed="4.0" />
 		</params>
 	</robot_xaxis_controller>
 </controllers>

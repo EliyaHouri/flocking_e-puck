@@ -3,6 +3,9 @@
  *
  * @author Eliyahu Houri
  *
+ * ### TO SWITCH BACK TO COLLISION-BASED REMOVAL ###
+ * 1. Uncomment the sections marked as "Collision-Based Removal".
+ * 2. Comment out the tracking functions and their calls in `PostStep`.
  */
 
 #include "flocking_loop_functions.h"
@@ -13,12 +16,12 @@
 #include <argos3/core/simulator/space/space.h>
 #include <argos3/core/simulator/simulator.h>
 #include <fstream>
-#include <thread>
-#include <chrono>
 
-
-
-CFlockingLoopFunctions::CFlockingLoopFunctions() : m_unKilledByEnemy(0), m_unReachedTarget(0) {}
+CFlockingLoopFunctions::CFlockingLoopFunctions() : 
+    m_unKilledByEnemy(0), 
+    m_unReachedTarget(0), 
+    m_unTotalCollisions(0),
+    m_cooldownTicks(20) {} // Cooldown duration in ticks (e.g., 10 ticks = 1 second)
 
 void CFlockingLoopFunctions::Init(TConfigurationNode& t_tree) {
     try {
@@ -28,76 +31,116 @@ void CFlockingLoopFunctions::Init(TConfigurationNode& t_tree) {
     }
 }
 
+void CFlockingLoopFunctions::TrackDistanceTraveled(const std::string& robot_id, const CVector3& current_position) {
+    if (m_mapPreviousPositions.find(robot_id) != m_mapPreviousPositions.end()) {
+        Real fDistance = (current_position - m_mapPreviousPositions[robot_id]).Length();
+        m_mapDistanceTraveled[robot_id] += fDistance;
+    }
+    m_mapPreviousPositions[robot_id] = current_position;
+}
+
+void CFlockingLoopFunctions::CheckCollisionsWithEnemy(const std::string& robot_id, const CVector3& robot_position, const CVector3& enemy_position) {
+    Real fDistanceToEnemy = (robot_position - enemy_position).Length();
+    if (fDistanceToEnemy < 0.1) { // Adjust threshold as needed
+        UInt32 current_tick = CSimulator::GetInstance().GetSpace().GetSimulationClock();
+        if (m_mapLastCollisionTick.find(robot_id) == m_mapLastCollisionTick.end() ||
+            current_tick - m_mapLastCollisionTick[robot_id] >= m_cooldownTicks) {
+            m_mapCollisionCount[robot_id]++;
+            m_unTotalCollisions++;
+            m_mapLastCollisionTick[robot_id] = current_tick; // Update last collision tick
+        }
+    }
+}
+
+bool CFlockingLoopFunctions::IsCloseToTarget(CEPuck2Entity& cEpuckBot) {
+    const CVector3& cPosition = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
+    Real fDistanceToTarget = abs(cPosition.GetY() - 1.2); // Adjust Y-coordinate target
+    return fDistanceToTarget < 0.2;
+}
+
 void CFlockingLoopFunctions::PostStep() {
     // Get a reference to the enemy robot
     CEPuck2Entity* pcEnemyBot = dynamic_cast<CEPuck2Entity*>(&GetSpace().GetEntity("enemy_robot"));
     CVector3 cEnemyPos = pcEnemyBot->GetEmbodiedEntity().GetOriginAnchor().Position;
 
-    // Containers to track robots to remove due to enemy collision and target reached
-    std::vector<std::string> robotsToRemoveForCollision;
-    std::vector<std::string> robotsToRemoveForTarget;
-
     // Iterate through all e-puck robots
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
     for (auto it = cEpuckBots.begin(); it != cEpuckBots.end(); ++it) {
         CEPuck2Entity& cEpuckBot = *any_cast<CEPuck2Entity*>(it->second);
+        std::string strRobotId = cEpuckBot.GetId();
 
-        // Skip the enemy bot itself
-        if (cEpuckBot.GetId() == "enemy_robot") continue;
+        // Skip the enemy robot
+        if (strRobotId == "enemy_robot") continue;
 
         // Get the position of the current robot
-        CVector3 cPos = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
-        Real fDistanceToEnemy = (cEnemyPos - cPos).Length();
-        Real fDistanceToTarget = abs(cPos.GetY() - 1.2);
+        CVector3 cCurrentPosition = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
 
-        // Check if the robot is close to the enemy (collision)
-        if (fDistanceToEnemy < 0.1) { // 0.1 distance from enemy
-            robotsToRemoveForCollision.push_back(cEpuckBot.GetId());
+        // Track distance traveled (common for both methods)
+        TrackDistanceTraveled(strRobotId, cCurrentPosition);
+
+        // *** Collision Tracking Method (Default) ***
+        // Uncomment this block if you want to track collisions
+        // CheckCollisionsWithEnemy(strRobotId, cCurrentPosition, cEnemyPos);
+
+        // *** Robot Removal Method ***
+        // Uncomment this block if you want to remove robots on collision
+        Real fDistanceToEnemy = (cEnemyPos - cCurrentPosition).Length();
+        if (fDistanceToEnemy < 0.1) { // Adjust threshold as needed
+            RemoveRobot(strRobotId);
+            ++m_unKilledByEnemy;
+            LOG << "Robot " << strRobotId << " removed due to collision with enemy." << std::endl;
         }
         
-        // Check if the robot is close enough to the target
-        if (fDistanceToTarget < 0.2) { // 0.2 distance from target
-            robotsToRemoveForTarget.push_back(cEpuckBot.GetId());
-        }
-    }
-    
-    // Remove robots that collided with the enemy
-    for (const std::string& strRobotId : robotsToRemoveForCollision) {
-        RemoveRobot(strRobotId);
-        LOG << "Robot " << strRobotId << " removed due to collision with enemy." << std::endl;
-        ++m_unKilledByEnemy;  // Increment collision count
-    }
 
-    // Remove robots that reached the target position
-    for (const std::string& strRobotId : robotsToRemoveForTarget) {
-        RemoveRobot(strRobotId);
-        LOG << "Robot " << strRobotId << " removed due to reaching the target position." << std::endl;
-        ++m_unReachedTarget;  // Increment target reached count
+        // Check if the robot reached the target
+        if (IsCloseToTarget(cEpuckBot)) {
+            RemoveRobot(strRobotId);
+            ++m_unReachedTarget;
+            LOG << "Robot " << strRobotId << " reached the target and was removed." << std::endl;
+        }
     }
 }
 
-/********************
-write data to the results file
-*********************/
-
 void CFlockingLoopFunctions::PostExperiment() {
-    // Output the final counts to a text file
     std::ofstream outFile("results.txt");
+
+    // Sort robot IDs for output
+    std::vector<std::string> sorted_robot_ids;
+    for (const auto& [robot_id, _] : m_mapDistanceTraveled) {
+        sorted_robot_ids.push_back(robot_id);
+    }
+    std::sort(sorted_robot_ids.begin(), sorted_robot_ids.end());
+
+    // Write overall statistics
     outFile << "killed " << m_unKilledByEnemy << "\n";
     outFile << "reached_target " << m_unReachedTarget << "\n";
-    outFile << "ticks " << CSimulator::GetInstance().GetSpace().GetSimulationClock() << "\n"; // Add ticks count
-    outFile.close();
+    outFile << "ticks " << CSimulator::GetInstance().GetSpace().GetSimulationClock() << "\n";
 
+    // Write distance traveled
+    outFile << "Distance Traveled:\n";
+    for (const std::string& robot_id : sorted_robot_ids) {
+        outFile << robot_id << ": " << m_mapDistanceTraveled[robot_id] << "\n";
+    }
+
+    // // *** Collision Tracking Method (Default) ***
+    // // Uncomment this block if you are using collision tracking
+    // outFile << "Collision Count:\n";
+    // for (const std::string& robot_id : sorted_robot_ids) {
+    //     outFile << robot_id << ": " << m_mapCollisionCount[robot_id] << "\n";
+    // }
+    // outFile << "Total Collisions: " << m_unTotalCollisions << "\n";
+
+    // *** Robot Removal Method ***
+    // Uncomment this block if you are using robot removal
+    outFile << "Robots removed by collision: " << m_unKilledByEnemy << "\n";
+    outFile << "Robots reached the target: " << m_unReachedTarget << "\n";
+
+    outFile.close();
     LOG << "Results saved to results.txt" << std::endl;
 }
 
 
-/********************
-stop the experiment when all robots are gone
-*********************/
-
-bool CFlockingLoopFunctions::IsExperimentFinished(){
-    // Check if only the enemy robot is left
+bool CFlockingLoopFunctions::IsExperimentFinished() {
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
     int robot_count = 0;
 
@@ -108,7 +151,6 @@ bool CFlockingLoopFunctions::IsExperimentFinished(){
         }
     }
 
-    // If no more robots are left except the enemy, stop the simulation
     if (robot_count == 0) {
         LOG << "All robots removed; stopping simulation." << std::endl;
         return true;
@@ -116,47 +158,13 @@ bool CFlockingLoopFunctions::IsExperimentFinished(){
     return false;
 }
 
-/***********************
- removing robot from the simulation
-************************/
-
 void CFlockingLoopFunctions::RemoveRobot(const std::string& strRobotId) {
     try {
-        // Retrieve the entity from the space
         CEntity& cEntity = GetSpace().GetEntity(strRobotId);
-
-        // Attempt to cast to CEPuck2Entity to access the controllable components
-        CEPuck2Entity* pcRobotEntity = dynamic_cast<CEPuck2Entity*>(&cEntity);
-        if (pcRobotEntity != nullptr) {
-            // Retrieve the robot's controller and take its address
-            CCI_Controller& cController = pcRobotEntity->GetControllableEntity().GetController();
-            CCI_Controller* pcController = &cController; // Take the address
-
-            // Perform a dynamic cast to the custom controller to disable actuators and sensors
-            CEPuck2Flocking* pcFlockingController = dynamic_cast<CEPuck2Flocking*>(pcController);
-            if (pcFlockingController != nullptr) {
-                pcFlockingController->DisableActuatorsAndSensors();
-            } else {
-                LOGERR << "Failed to cast controller to CEPuck2Flocking for robot: " << strRobotId << std::endl;
-            }
-        }
-
-        // Cast to an embodied entity and remove it from each physics engine
-        CEmbodiedEntity* pcEmbodiedEntity = dynamic_cast<CEmbodiedEntity*>(&cEntity);
-        if (pcEmbodiedEntity != nullptr) {
-            for (auto* pEngine : GetSpace().GetPhysicsEngines()) {
-                pEngine->RemoveEntity(*pcEmbodiedEntity);
-            }
-        }
-
-        // Use the space operation to fully remove the entity from the simulation
         CallEntityOperation<CSpaceOperationRemoveEntity, CSpace, void>(GetSpace(), cEntity);
-
     } catch (CARGoSException& ex) {
         LOGERR << "Error removing robot '" << strRobotId << "': " << ex.what() << std::endl;
     }
 }
 
 REGISTER_LOOP_FUNCTIONS(CFlockingLoopFunctions, "flocking_loop_functions")
-
-
