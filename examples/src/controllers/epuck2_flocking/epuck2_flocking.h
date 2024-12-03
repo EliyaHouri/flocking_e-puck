@@ -51,6 +51,7 @@ public:
     virtual void Reset();
     virtual void Destroy();
     void DisableActuatorsAndSensors();
+    Real target = 7.0;
 
 private:
 

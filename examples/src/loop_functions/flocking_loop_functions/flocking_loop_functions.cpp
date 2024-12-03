@@ -54,23 +54,22 @@ void CFlockingLoopFunctions::CheckCollisionsWithEnemy(const std::string& robot_i
 
 bool CFlockingLoopFunctions::IsCloseToTarget(CEPuck2Entity& cEpuckBot) {
     const CVector3& cPosition = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
-    Real fDistanceToTarget = abs(cPosition.GetY() - 1.2); // Adjust Y-coordinate target
+    Real fDistanceToTarget = abs(cPosition.GetY() - target); // Adjust Y-coordinate target
     return fDistanceToTarget < 0.2;
 }
 
 void CFlockingLoopFunctions::PostStep() {
-    // Get a reference to the enemy robot
-    CEPuck2Entity* pcEnemyBot = dynamic_cast<CEPuck2Entity*>(&GetSpace().GetEntity("enemy_robot"));
-    CVector3 cEnemyPos = pcEnemyBot->GetEmbodiedEntity().GetOriginAnchor().Position;
-
     // Iterate through all e-puck robots
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
+
     for (auto it = cEpuckBots.begin(); it != cEpuckBots.end(); ++it) {
         CEPuck2Entity& cEpuckBot = *any_cast<CEPuck2Entity*>(it->second);
         std::string strRobotId = cEpuckBot.GetId();
 
-        // Skip the enemy robot
-        if (strRobotId == "enemy_robot") continue;
+        // Check if the robot is an enemy robot
+        if (strRobotId.find("enemy_robot") != std::string::npos) {
+            continue; // Skip enemy robots for distance tracking or removal
+        }
 
         // Get the position of the current robot
         CVector3 cCurrentPosition = cEpuckBot.GetEmbodiedEntity().GetOriginAnchor().Position;
@@ -80,17 +79,35 @@ void CFlockingLoopFunctions::PostStep() {
 
         // *** Collision Tracking Method (Default) ***
         // Uncomment this block if you want to track collisions
-        // CheckCollisionsWithEnemy(strRobotId, cCurrentPosition, cEnemyPos);
+        /*
+        for (auto enemy_it = cEpuckBots.begin(); enemy_it != cEpuckBots.end(); ++enemy_it) {
+            CEPuck2Entity& cEnemyBot = *any_cast<CEPuck2Entity*>(enemy_it->second);
+            std::string strEnemyId = cEnemyBot.GetId();
+
+            if (strEnemyId.find("enemy_robot") != std::string::npos) { // Match dynamic enemy IDs
+                CVector3 cEnemyPosition = cEnemyBot.GetEmbodiedEntity().GetOriginAnchor().Position;
+                CheckCollisionsWithEnemy(strRobotId, cCurrentPosition, cEnemyPosition);
+            }
+        }
+        */
 
         // *** Robot Removal Method ***
         // Uncomment this block if you want to remove robots on collision
-        Real fDistanceToEnemy = (cEnemyPos - cCurrentPosition).Length();
-        if (fDistanceToEnemy < 0.1) { // Adjust threshold as needed
-            RemoveRobot(strRobotId);
-            ++m_unKilledByEnemy;
-            LOG << "Robot " << strRobotId << " removed due to collision with enemy." << std::endl;
+        for (auto enemy_it = cEpuckBots.begin(); enemy_it != cEpuckBots.end(); ++enemy_it) {
+            CEPuck2Entity& cEnemyBot = *any_cast<CEPuck2Entity*>(enemy_it->second);
+            std::string strEnemyId = cEnemyBot.GetId();
+
+            if (strEnemyId.find("enemy_robot") != std::string::npos) { // Match dynamic enemy IDs
+                CVector3 cEnemyPosition = cEnemyBot.GetEmbodiedEntity().GetOriginAnchor().Position;
+                Real fDistanceToEnemy = (cEnemyPosition - cCurrentPosition).Length();
+                if (fDistanceToEnemy < 0.1) { // Adjust collision threshold as needed
+                    RemoveRobot(strRobotId);
+                    ++m_unKilledByEnemy;
+                    LOG << "Robot " << strRobotId << " removed due to collision with enemy " << strEnemyId << "." << std::endl;
+                    break; // Exit the enemy loop since the robot is already removed
+                }
+            }
         }
-        
 
         // Check if the robot reached the target
         if (IsCloseToTarget(cEpuckBot)) {
@@ -100,6 +117,7 @@ void CFlockingLoopFunctions::PostStep() {
         }
     }
 }
+
 
 void CFlockingLoopFunctions::PostExperiment() {
     std::ofstream outFile("results.txt");
@@ -141,22 +159,30 @@ void CFlockingLoopFunctions::PostExperiment() {
 
 
 bool CFlockingLoopFunctions::IsExperimentFinished() {
+    // Get all entities of type "e-puck2"
     CSpace::TMapPerType cEpuckBots = GetSpace().GetEntitiesByType("e-puck2");
     int robot_count = 0;
 
+    // Count the number of non-enemy robots still present in the simulation
     for (auto it = cEpuckBots.begin(); it != cEpuckBots.end(); ++it) {
         CEPuck2Entity& cEpuckBot = *any_cast<CEPuck2Entity*>(it->second);
-        if (cEpuckBot.GetId() != "enemy_robot") {
+        if (cEpuckBot.GetId().find("enemy_robot") == std::string::npos) {
             ++robot_count;
         }
     }
 
+    // Log the remaining robots for debugging purposes
+    LOG << "Number of remaining robots (excluding enemies): " << robot_count << std::endl;
+
+    // Stop the simulation if no robots (excluding enemies) are left
     if (robot_count == 0) {
-        LOG << "All robots removed; stopping simulation." << std::endl;
+        LOG << "All non-enemy robots removed; stopping simulation." << std::endl;
         return true;
     }
+
     return false;
 }
+
 
 void CFlockingLoopFunctions::RemoveRobot(const std::string& strRobotId) {
     try {

@@ -26,6 +26,7 @@ public:
    virtual void PostStep();
    virtual void PostExperiment();
    virtual bool IsExperimentFinished();
+   Real target = 7.0;
 
 private:
    // Function to track distance traveled by each robot

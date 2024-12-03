@@ -146,7 +146,7 @@ CVector2 CEPuck2Flocking::VectorToLight() {
     CVector2 cRobotPos2D(cRobotPosition.GetX(), cRobotPosition.GetY());
 
     // The point we defined as the target ("light")
-    CVector2 cLight(0.0, 1.2);
+    CVector2 cLight(0.0, target);
 
     // Calculate the vector to the light (this gives direction and distance)
     CVector2 cDirectionToLight(0.0, cLight.GetY() - cRobotPos2D.GetY());
