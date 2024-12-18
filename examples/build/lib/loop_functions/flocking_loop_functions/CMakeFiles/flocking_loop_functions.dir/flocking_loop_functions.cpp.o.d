@@ -299,4 +299,20 @@ lib/loop_functions/flocking_loop_functions/CMakeFiles/flocking_loop_functions.di
  /usr/local/include/argos3/core/utility/datatypes/color.h \
  /usr/local/include/argos3/plugins/robots/e-puck2/simulator/epuck2_entity.h \
  /usr/local/include/argos3/core/simulator/entity/composable_entity.h \
- /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h
+ /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h \
+ /home/eliyahu/Desktop/e-puck2/examples/src/loop_functions/flocking_loop_functions/../../controllers/epuck2_flocking/epuck2_flocking.h \
+ /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h \
+ /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.h \
+ /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_leds_actuator.h \
+ /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_tof_sensor.h \
+ /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h \
+ /usr/local/include/argos3/core/utility/datatypes/byte_array.h \
+ /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+ /usr/include/linux/close_range.h \
+ /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h

@@ -4,7 +4,7 @@ project(argos3_epuck2_examples)
 # Set the compilation type
 if(CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
-endif(CMAKE_BUILD_TYPE STREQUAL "")
+endif()
 
 # Deactivate RPATH for MacOSX
 set(CMAKE_MACOSX_RPATH 0)
@@ -28,9 +28,8 @@ link_libraries(${ARGOS_LDFLAGS})
 find_package(GALIB)
 if(GALIB_FOUND)
   include_directories(${GALIB_INCLUDE_DIRS})
-endif(GALIB_FOUND)
+endif()
 
-# Descend into the controllers directory
+# Descend into the controllers and loop functions directories
 add_subdirectory(src lib)
-
 

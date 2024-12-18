@@ -358,11 +358,48 @@ lib/loop_functions/flocking_loop_functions/CMakeFiles/flocking_loop_functions.di
   /usr/local/include/argos3/core/utility/datatypes/color.h \
   /usr/local/include/argos3/plugins/robots/e-puck2/simulator/epuck2_entity.h \
   /usr/local/include/argos3/core/simulator/entity/composable_entity.h \
-  /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h
+  /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h \
+  ../src/controllers/epuck2_flocking/epuck2_flocking.h \
+  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h \
+  /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.h \
+  /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_leds_actuator.h \
+  /usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_tof_sensor.h \
+  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h \
+  /usr/local/include/argos3/core/utility/datatypes/byte_array.h \
+  /usr/include/unistd.h \
+  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+  /usr/include/x86_64-linux-gnu/bits/environments.h \
+  /usr/include/x86_64-linux-gnu/bits/confname.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+  /usr/include/linux/close_range.h \
+  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h
 
 lib/loop_functions/flocking_loop_functions/CMakeFiles/flocking_loop_functions.dir/flocking_loop_functions_autogen/mocs_compilation.cpp.o: lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_compilation.cpp \
   /usr/include/stdc-predef.h
 
+
+/usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h:
+
+/usr/include/linux/close_range.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
+
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+
+/usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h:
+
+/usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_tof_sensor.h:
+
+/usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_leds_actuator.h:
+
+/usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h:
+
+../src/controllers/epuck2_flocking/epuck2_flocking.h:
 
 /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h:
 
@@ -397,6 +434,8 @@ lib/loop_functions/flocking_loop_functions/CMakeFiles/flocking_loop_functions.di
 /usr/local/include/argos3/core/utility/math/matrix/rotationmatrix3.h:
 
 /usr/local/include/argos3/core/utility/math/quaternion.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
 /usr/local/include/argos3/core/simulator/space/positional_indices/space_hash.h:
 
@@ -439,6 +478,8 @@ lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_
 /usr/include/c++/11/bits/fstream.tcc:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h:
+
+/usr/local/include/argos3/core/utility/datatypes/byte_array.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h:
 
@@ -740,6 +781,8 @@ lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_
 
 /usr/local/include/argos3/core/utility/configuration/argos_exception.h:
 
+/usr/include/x86_64-linux-gnu/bits/environments.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
 
 /usr/include/c++/11/bits/exception_defines.h:
@@ -748,7 +791,11 @@ lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_
 
 /usr/include/c++/11/initializer_list:
 
+/usr/include/unistd.h:
+
 /usr/include/c++/11/bits/stl_algobase.h:
+
+/usr/local/include/argos3/plugins/robots/e-puck2/control_interface/ci_epuck2_proximity_sensor.h:
 
 /usr/include/x86_64-linux-gnu/bits/select2.h:
 
@@ -918,6 +965,8 @@ lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_
 
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
 
+/usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
+
 /usr/include/time.h:
 
 /usr/include/x86_64-linux-gnu/bits/setjmp.h:
@@ -1061,6 +1110,8 @@ lib/loop_functions/flocking_loop_functions/flocking_loop_functions_autogen/mocs_
 /usr/include/c++/11/bits/stl_raw_storage_iter.h:
 
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd.h:
 
 /usr/local/include/argos3/core/utility/math/angles.h:
 

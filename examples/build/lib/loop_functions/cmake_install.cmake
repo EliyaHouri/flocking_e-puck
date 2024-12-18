@@ -44,8 +44,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/eliyahu/Desktop/e-puck2/examples/build/lib/loop_functions/sensors_loop_functions/cmake_install.cmake")
-  include("/home/eliyahu/Desktop/e-puck2/examples/build/lib/loop_functions/swarm_loop_functions/cmake_install.cmake")
   include("/home/eliyahu/Desktop/e-puck2/examples/build/lib/loop_functions/flocking_loop_functions/cmake_install.cmake")
 
 endif()

@@ -34,6 +34,9 @@ struct SFlockingInteractionParams {
     Real RepulsionForce;
     Real Noise;
     Real SpeedFactor;
+    Real LightStrength;
+    Real FriendRepulsionForce;
+    Real EnemyRepulsionForce;
 
     void Init(TConfigurationNode& t_node);
     Real GeneralizedLennardJones(Real f_distance);

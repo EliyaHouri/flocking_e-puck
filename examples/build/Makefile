@@ -143,56 +143,30 @@ epuck2_flocking_autogen/fast:
 .PHONY : epuck2_flocking_autogen/fast
 
 #=============================================================================
-# Target rules for targets named sensors_loop_functions
+# Target rules for targets named epuck2_enemy
 
 # Build rule for target.
-sensors_loop_functions: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sensors_loop_functions
-.PHONY : sensors_loop_functions
+epuck2_enemy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 epuck2_enemy
+.PHONY : epuck2_enemy
 
 # fast build rule for target.
-sensors_loop_functions/fast:
-	$(MAKE) $(MAKESILENT) -f lib/loop_functions/sensors_loop_functions/CMakeFiles/sensors_loop_functions.dir/build.make lib/loop_functions/sensors_loop_functions/CMakeFiles/sensors_loop_functions.dir/build
-.PHONY : sensors_loop_functions/fast
+epuck2_enemy/fast:
+	$(MAKE) $(MAKESILENT) -f lib/controllers/epuck2_enemy/CMakeFiles/epuck2_enemy.dir/build.make lib/controllers/epuck2_enemy/CMakeFiles/epuck2_enemy.dir/build
+.PHONY : epuck2_enemy/fast
 
 #=============================================================================
-# Target rules for targets named sensors_loop_functions_autogen
+# Target rules for targets named epuck2_enemy_autogen
 
 # Build rule for target.
-sensors_loop_functions_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sensors_loop_functions_autogen
-.PHONY : sensors_loop_functions_autogen
+epuck2_enemy_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 epuck2_enemy_autogen
+.PHONY : epuck2_enemy_autogen
 
 # fast build rule for target.
-sensors_loop_functions_autogen/fast:
-	$(MAKE) $(MAKESILENT) -f lib/loop_functions/sensors_loop_functions/CMakeFiles/sensors_loop_functions_autogen.dir/build.make lib/loop_functions/sensors_loop_functions/CMakeFiles/sensors_loop_functions_autogen.dir/build
-.PHONY : sensors_loop_functions_autogen/fast
-
-#=============================================================================
-# Target rules for targets named swarm_loop_functions
-
-# Build rule for target.
-swarm_loop_functions: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 swarm_loop_functions
-.PHONY : swarm_loop_functions
-
-# fast build rule for target.
-swarm_loop_functions/fast:
-	$(MAKE) $(MAKESILENT) -f lib/loop_functions/swarm_loop_functions/CMakeFiles/swarm_loop_functions.dir/build.make lib/loop_functions/swarm_loop_functions/CMakeFiles/swarm_loop_functions.dir/build
-.PHONY : swarm_loop_functions/fast
-
-#=============================================================================
-# Target rules for targets named swarm_loop_functions_autogen
-
-# Build rule for target.
-swarm_loop_functions_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 swarm_loop_functions_autogen
-.PHONY : swarm_loop_functions_autogen
-
-# fast build rule for target.
-swarm_loop_functions_autogen/fast:
-	$(MAKE) $(MAKESILENT) -f lib/loop_functions/swarm_loop_functions/CMakeFiles/swarm_loop_functions_autogen.dir/build.make lib/loop_functions/swarm_loop_functions/CMakeFiles/swarm_loop_functions_autogen.dir/build
-.PHONY : swarm_loop_functions_autogen/fast
+epuck2_enemy_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f lib/controllers/epuck2_enemy/CMakeFiles/epuck2_enemy_autogen.dir/build.make lib/controllers/epuck2_enemy/CMakeFiles/epuck2_enemy_autogen.dir/build
+.PHONY : epuck2_enemy_autogen/fast
 
 #=============================================================================
 # Target rules for targets named flocking_loop_functions
@@ -228,14 +202,12 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... epuck2_enemy_autogen"
 	@echo "... epuck2_flocking_autogen"
 	@echo "... flocking_loop_functions_autogen"
-	@echo "... sensors_loop_functions_autogen"
-	@echo "... swarm_loop_functions_autogen"
+	@echo "... epuck2_enemy"
 	@echo "... epuck2_flocking"
 	@echo "... flocking_loop_functions"
-	@echo "... sensors_loop_functions"
-	@echo "... swarm_loop_functions"
 .PHONY : help
 
 

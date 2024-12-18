@@ -20,7 +20,8 @@
 		</sensors>
 		<params debug="3" distance="50">
 		    <flocking target_distance="20.0" gain="10.0" exponent="6.0" max_interaction="1.0" wall_distance="75.0"
-		    max_wall_interaction="3.0" goal_distance="0.2" repulsion_force="15.0" speed_factor="2.0" noise="0.0" />
+            max_wall_interaction="3.0" goal_distance="0.2" repulsion_force="15.0" speed_factor="2.0" noise="0.0"
+            light_strength="0.5" friend_repulsion_force="12.0" enemy_repulsion_force="20.0" />
 		</params>
 	</epuck2_flocking_controller>
     
@@ -28,7 +29,8 @@
 	<robot_xaxis_controller id="enemy" library="build/lib/controllers/epuck2_enemy/libepuck2_enemy">
 		<actuators>
 		    <differential_steering implementation="default"/>
-		    <range_and_bearing implementation="default"/> <!-- Add the RAB actuator here -->
+            <epuck2_leds implementation="default" medium="leds" /> 
+		    <range_and_bearing implementation="default"/>
 		</actuators>
 		<sensors>
 		    <epuck2_proximity implementation="default" show_rays="false"/>

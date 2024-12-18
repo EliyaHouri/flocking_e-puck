@@ -45,6 +45,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/eliyahu/Desktop/e-puck2/examples/build/lib/controllers/epuck2_flocking/cmake_install.cmake")
+  include("/home/eliyahu/Desktop/e-puck2/examples/build/lib/controllers/epuck2_enemy/cmake_install.cmake")
 
 endif()
 

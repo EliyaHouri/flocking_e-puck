@@ -17,10 +17,20 @@ void CRobotXAxisController::Init(TConfigurationNode& t_node) {
     // Initialize actuators
     m_pcWheels = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
     m_pcRABAct = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
+    m_pcLedAct = GetActuator<CCI_EPuck2LEDsActuator>("epuck2_leds");
+
     m_bMovingForward = true;
 
     // Initialize the enemy parameters
     m_sEnemyParams.Init(GetNode(t_node, "enemy"));
+
+    // Initialize LEDs to RED for enemy robots
+    m_pcLedAct->SetAllBlack();
+    m_pcLedAct->SetAllRedLeds(true); // Red LEDs ON
+    m_pcLedAct->SetRGBLed2Color(CColor::RED);
+    m_pcLedAct->SetRGBLed4Color(CColor::RED);
+    m_pcLedAct->SetRGBLed6Color(CColor::RED);
+    m_pcLedAct->SetRGBLed8Color(CColor::RED);
 }
 
 // Main control loop

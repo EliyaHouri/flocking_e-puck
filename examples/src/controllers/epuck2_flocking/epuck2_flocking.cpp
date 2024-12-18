@@ -41,11 +41,15 @@ void SFlockingInteractionParams::Init(TConfigurationNode& t_node) {
         GetNodeAttributeOrDefault(t_node, "repulsion_force", RepulsionForce, 15.0);
         GetNodeAttributeOrDefault(t_node, "speed_factor", SpeedFactor, 1.0);
         GetNodeAttributeOrDefault(t_node, "noise", Noise, 0.0);
+        GetNodeAttributeOrDefault(t_node, "light_strength", LightStrength, 0.5);
+        GetNodeAttributeOrDefault(t_node, "friend_repulsion_force", FriendRepulsionForce, 12.0);
+        GetNodeAttributeOrDefault(t_node, "enemy_repulsion_force", EnemyRepulsionForce, 20.0);
     }
     catch(CARGoSException& ex) {
         THROW_ARGOSEXCEPTION_NESTED("Error initializing flocking parameters.", ex);
     }
 }
+
 
 /****************************************
 This function is a generalization of the Lennard-Jones potential
@@ -60,19 +64,23 @@ Real SFlockingInteractionParams::GeneralizedLennardJones(Real f_distance) {
 
 void CEPuck2Flocking::Init(TConfigurationNode &t_node) {
     m_pcWheels    = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
-    m_pcProximity = GetSensor  <CCI_EPuck2ProximitySensor       >("epuck2_proximity"     );
-    m_pcLedAct    = GetActuator<CCI_EPuck2LEDsActuator          >("epuck2_leds"          );
-    m_pcTOFSensor = GetSensor  <CCI_EPuck2TOFSensor             >("epuck2_tof"           );
-    m_pcRABAct    = GetActuator<CCI_RangeAndBearingActuator     >("range_and_bearing"    );
-    m_pcRABSens   = GetSensor  <CCI_RangeAndBearingSensor       >("range_and_bearing"    );
+    m_pcProximity = GetSensor  <CCI_EPuck2ProximitySensor       >("epuck2_proximity");
+    m_pcLedAct    = GetActuator<CCI_EPuck2LEDsActuator          >("epuck2_leds");
+    m_pcTOFSensor = GetSensor  <CCI_EPuck2TOFSensor             >("epuck2_tof");
+    m_pcRABAct    = GetActuator<CCI_RangeAndBearingActuator     >("range_and_bearing");
+    m_pcRABSens   = GetSensor  <CCI_RangeAndBearingSensor       >("range_and_bearing");
 
     m_sFlockingParams.Init(GetNode(t_node, "flocking"));
-
-    //Get the ID of the current robot
     m_strRobotId = GetId();
-    
-    // Set initial state
     m_eState = STATE_START;
+
+    // Initialize LEDs to BLUE
+    m_pcLedAct->SetAllBlack();
+    m_pcLedAct->SetAllRedLeds(false);
+    m_pcLedAct->SetRGBLed2Color(CColor::BLUE);
+    m_pcLedAct->SetRGBLed4Color(CColor::BLUE);
+    m_pcLedAct->SetRGBLed6Color(CColor::BLUE);
+    m_pcLedAct->SetRGBLed8Color(CColor::BLUE);
 }
 
 /****************************************
@@ -133,38 +141,28 @@ void CEPuck2Flocking::Flock() {
 /****************************************/
 
 CVector2 CEPuck2Flocking::VectorToLight() {
-    // Get the robot entity from the space by the robot's ID
     CEPuck2Entity& cEntity = dynamic_cast<CEPuck2Entity&>(CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
     CEmbodiedEntity& cEmbodiedEntity = cEntity.GetEmbodiedEntity();
     const CVector3& cRobotPosition = cEmbodiedEntity.GetOriginAnchor().Position;
 
-    // Get the robot's current heading/orientation
     CRadians cRobotYaw, cRobotPitch, cRobotRoll;
     cEmbodiedEntity.GetOriginAnchor().Orientation.ToEulerAngles(cRobotYaw, cRobotPitch, cRobotRoll);
 
-    // Get the robot's 2D position
     CVector2 cRobotPos2D(cRobotPosition.GetX(), cRobotPosition.GetY());
-
-    // The point we defined as the target ("light")
     CVector2 cLight(0.0, target);
 
-    // Calculate the vector to the light (this gives direction and distance)
     CVector2 cDirectionToLight(0.0, cLight.GetY() - cRobotPos2D.GetY());
-
-    // Calculate the angle to the light relative to the robot's current heading
-    CRadians cAngleToLight = cDirectionToLight.Angle() - cRobotYaw + CRadians(ARGOS_PI / 4);;
 
     if (fabs(cDirectionToLight.Length()) < 0.00005f) {
         cDirectionToLight = CVector2(0.0, 0.0); // Avoid invalid vector
     } else {
         cDirectionToLight.Normalize();
-        cDirectionToLight *= 0.5;  // Apply a small potential force
+        cDirectionToLight *= m_sFlockingParams.LightStrength;  // Apply adjustable light strength
     }
 
-
-    // Return the vector pointing toward the light with consideration of angle
-    return CVector2(cDirectionToLight.Length(), cAngleToLight);
+    return CVector2(cDirectionToLight.Length(), cDirectionToLight.Angle() - cRobotYaw + CRadians(ARGOS_PI / 4));
 }
+
 
 
 /****************************************/
@@ -200,29 +198,33 @@ CVector2 CEPuck2Flocking::CalculateWallRepulsionForce() {
     const CCI_EPuck2ProximitySensor::TReadings& tProxReads = m_pcProximity->GetReadings();
     CVector2 cRepulsionVector;
 
-    if(!tProxReads.empty()) {
-        for(size_t i = 0; i < tProxReads.size(); ++i) {
-            if (tProxReads[i].Value > 0.0f) { //prevent inf's
-                // Calculate the magnitude of the repulsion force (inverse relationship)
-                Real fRepulsionMagnitude = m_sFlockingParams.GeneralizedLennardJones(tProxReads[i].Value);
+    if (!tProxReads.empty()) {
+        for (size_t i = 0; i < tProxReads.size(); ++i) {
+            if (tProxReads[i].Value > 0.0f) {
+                // Check LED color to determine if it's a friend or enemy
+                bool bIsEnemy = (tProxReads[i].Value < 0.5); // Example logic for enemy detection
                 
+                // Apply appropriate repulsion force
+                Real fRepulsionMagnitude = bIsEnemy
+                    ? m_sFlockingParams.EnemyRepulsionForce
+                    : m_sFlockingParams.FriendRepulsionForce;
+
                 // Accumulate the vector
                 cRepulsionVector += CVector2((1 / (fRepulsionMagnitude + 10)), tProxReads[i].Angle);
             }
         }
-        
-        // Check if the vector length exceeds the maximum allowed interaction
+
         if (fabs(cRepulsionVector.Length()) < 0.00005f) {
             cRepulsionVector = CVector2(0.0, 0.0); // Avoid invalid vector
         } else {
             cRepulsionVector.Normalize();
         }
-
     }
 
     // Reverse the vector direction
-    return cRepulsionVector * -1 * m_sFlockingParams.RepulsionForce;
+    return cRepulsionVector * -1;
 }
+
 
 /****************************************/
 /****************************************/
