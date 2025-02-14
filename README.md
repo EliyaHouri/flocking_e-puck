@@ -1,10 +1,14 @@
 # Swarm Robotics: Optimizing Behavior for Survival in the Presence of Enemies
 
 ## Project Overview
+**Author:** Eliyahu Houri  
+**Date:** December 18, 2024  
 **Platform:** [ARGoS Simulation Framework](https://argos-sim.info/)  
 **Robotic Platform:** E-puck2  
 
 This project focuses on optimizing swarm robotic behavior in a simulated environment where friendly robots must survive in the presence of adversarial enemy agents. The goal is to develop effective flocking behaviors that balance survival, target-seeking, and enemy avoidance. The project leverages the ARGoS simulation framework and supports large-scale testing with dynamically adjustable parameters.
+
+This work is based on the integration of **Daniel H. Stolfi**'s contributions to integrating the **E-puck2** with ARGoS. However, significant additional integrations and adaptations were necessary to fully implement the survival-based swarm behaviors. My work focused on refining the simulation dynamics, enhancing modularity, and developing a robust parameter tuning and data collection pipeline while ensuring a scalable and adaptive framework. This contribution builds upon prior foundations while introducing new mechanisms for improved efficiency and analysis.
 
 ## Key Features
 ### 🏗 Dynamic and Modular Architecture
