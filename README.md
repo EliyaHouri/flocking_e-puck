@@ -1,8 +1,6 @@
 # Swarm Robotics: Optimizing Behavior for Survival in the Presence of Enemies
 
 ## Project Overview
-**Author:** Eliyahu Houri  
-**Date:** December 18, 2024  
 **Platform:** [ARGoS Simulation Framework](https://argos-sim.info/)  
 **Robotic Platform:** E-puck2  
 
